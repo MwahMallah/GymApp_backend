@@ -56,11 +56,11 @@ foodRouter.put('/:id', async (req, res, next) => {
         const foodToUpdate = await Food.findById(id);
 
         if (!foodToUpdate) {
-            return res.status(404).json({error: "exercise not found"});
+            return res.status(404).json({error: "food not found"});
         }
 
         if (foodToUpdate.user.toString() != user.id.toString()) {
-            return res.status(401).json({error: "provided user is not owner of the exercise."});
+            return res.status(401).json({error: "provided user is not owner of the food."});
         }
 
         const updated = await Food.findByIdAndUpdate(id, req.body, {new: true});
