@@ -3,7 +3,17 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt')
 
 usersRouter.get('/', async (req, res) => {
-    const users = await User.find({}).select('-exercises -food');
+    const query = {};
+    const startsWith = req.query.username;
+
+    console.log(startsWith)
+    //filter by name
+    if (startsWith) {
+        query.username = {$regex: `^${startsWith}`, $options: 'i'};
+        console.log(query);
+    }
+
+    const users = await User.find(query).select('-exercises -food');
     res.json(users);
 });
 
