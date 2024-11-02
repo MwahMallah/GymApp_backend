@@ -1,2 +1,2 @@
-GET http://localhost:3005/api/exercise
+GET http://localhost:3005/api/exercise?date=2024-11-02
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU3Mjk4MH0.arPt0YQfgDwHF8K5Kbl8jRL0GwFfr5YzR6i0opvn_5s

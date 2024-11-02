@@ -2,7 +2,24 @@ const exerciseRouter = require('express').Router();
 const Exercise = require('../models/exercise');
 
 exerciseRouter.get("/", async (req, res) => {
-    const exercises = await Exercise.find({user: req.user.id});
+    const { date } = req.query;
+    const query = { user: req.user.id };
+
+    if (date) {
+        // Set time to midnight (00:00:00) of the given date
+        const parsedDate = new Date(date);
+        parsedDate.setHours(0, 0, 0, 0); 
+
+        // Get the start of the next day
+        const nextDate = new Date(parsedDate);
+        nextDate.setDate(nextDate.getDate() + 1);
+
+        // Filter exercises by date: from the start of the given 
+        // date to the start of the next day
+        query.date = { $gte: parsedDate, $lt: nextDate };
+    }
+
+    const exercises = await Exercise.find(query);
     res.json(exercises);
 });
 

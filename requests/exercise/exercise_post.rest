@@ -3,7 +3,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU2OTY1M30.I-ViN9t_JnWnXCRnk9X2i3SqPJfCbA9JC7sNvYl_6kc
 
 {
-    "name" : "Bicep curl",
-    "reps" : 12,
-    "weight": 20
+    "name" : "Block-pull",
+    "reps" : 10,
+    "sets": 3,
+    "date": "2024-11-15"
 }
