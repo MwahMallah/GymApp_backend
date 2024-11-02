@@ -1,11 +1,8 @@
 const exerciseRouter = require('express').Router();
-const logger = require('../utils/logger');
 const Exercise = require('../models/exercise');
-const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 
 exerciseRouter.get("/", async (req, res) => {
-    const exercises = await Exercise.find({user: req.user.id}).populate('user', {exercises: 0});
+    const exercises = await Exercise.find({user: req.user.id});
     res.json(exercises);
 });
 

@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     username: {type: String, required: true, minLength: 3, unique: true},
     name: {type: String},
     exercises: [{type: mongoose.Schema.Types.ObjectId, ref: "Exercise"}],
+    food: [{type: mongoose.Schema.Types.ObjectId, ref: "Food"}],
     passwordHash: {type: String},
 });
 

@@ -1,16 +1,13 @@
 const mongoose = require('mongoose');
 
-const exerciseSchema = new mongoose.Schema({
+const foodScheme = new mongoose.Schema({
     name: {type: String, required: true},
-    reps: {type: Number},
-    sets: {type: Number},
-    weight: {type: Number},
-    isCompleted: {type: Boolean, default: false},
+    calories: {type: Number},
     date: {type: Date},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
-exerciseSchema.set('toJSON', {
+foodScheme.set('toJSON', {
     transform: (document, returnValue) => {
         returnValue.id = document._id;
         delete returnValue._id;
@@ -18,4 +15,4 @@ exerciseSchema.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('Exercise', exerciseSchema);
+module.exports = mongoose.model('Food', foodScheme);

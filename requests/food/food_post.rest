@@ -1,0 +1,8 @@
+POST http://localhost:3005/api/food
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU3MDc5MH0.LCnEJsyLi3qEflTaknDt3R-uikpPHGJ99K8fO2UIeNM
+
+{
+    "name" : "Eggs",
+    "calories": 100
+}
