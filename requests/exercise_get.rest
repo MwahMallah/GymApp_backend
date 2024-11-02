@@ -1,0 +1,2 @@
+GET http://localhost:3005/api/exercise
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im13YWhfbWFsbGFoIiwiaWQiOiI2NzI2NTJlZjEyOTIxMGI1NTNkMjRhZjAiLCJpYXQiOjE3MzA1NjcxODF9.DWpyGGnSPfX4TGXORE_vr8ic77JymRbirhivVgKN7lc
