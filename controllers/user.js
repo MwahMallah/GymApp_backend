@@ -8,7 +8,8 @@ usersRouter.get('/', async (req, res) => {
 });
 
 usersRouter.post('/', async (req, res, next) => {
-    const {username, password, name} = req.body;
+    let {username, password, name} = req.body;
+    password = String(password);
 
     if (!password || password.length < 3)
         return res.status(400).end();
@@ -23,6 +24,7 @@ usersRouter.post('/', async (req, res, next) => {
         const savedUser = await user.save();
         res.status(201).json(savedUser);
     } catch(e) {
+
         next(e);
     }
 });

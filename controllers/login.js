@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 loginRouter.post('/', async (req, res) => {
-    const {username, password} = req.body;
+    let {username, password} = req.body;
+    password = String(password);
 
     const user = await User.findOne({username});
 
