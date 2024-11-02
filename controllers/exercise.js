@@ -25,28 +25,23 @@ exerciseRouter.post('/', async (req, res, next) => {
 });
 
 exerciseRouter.delete('/:id', async (req, res, next) => {
-    const decodedToken = jwt.decode(req.token, process.env.SECRET);
-
-    if (!decodedToken.id) {
-        return res.status(401).json({error: "token is invalid"});
-    }
-
-    const {id, username, name} = decodedToken;
-    const user = await User.findById(id);
-    if (!user || user.username != username || user.name != name)
-        return res.status(401).json({error: "token is invalid"});
-
     try {
+        const user = req.user;
         const id = req.params.id;
-        const blogToDelete = await Blog.findById(id);
+        const exerciseToDelete = await Exercise.findById(id);
 
-        console.log(user);
-        if (blogToDelete.user.id.toString() != user.id.toString()) {
-            return res.status(401).json({error: "provided user is not owner of the blog."});
+        if (!exerciseToDelete) {
+            return res.status(404).json({error: "exercise not found"});
         }
 
-        const deleted = await Blog.findByIdAndDelete(id);
+        if (exerciseToDelete.user.toString() != user.id.toString()) {
+            return res.status(401).json({error: "provided user is not owner of the exercise."});
+        }
+
+        const deleted = await Exercise.findByIdAndDelete(id);
         if (deleted) {
+            user.exercises = user.exercises.filter(eId => eId.toString() !== id);
+            await user.save();    
             res.status(204).end();
         } else {
             res.status(404).end();

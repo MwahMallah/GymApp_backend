@@ -1,2 +1,2 @@
-GET http://localhost:3005/api/exercise
+DELETE http://localhost:3005/api/exercise/6726593502c18d1fa371ca9f
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU2OTY1M30.I-ViN9t_JnWnXCRnk9X2i3SqPJfCbA9JC7sNvYl_6kc

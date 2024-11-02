@@ -1,8 +1,9 @@
 POST http://localhost:3005/api/exercise
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im13YWhfbWFsbGFoIiwiaWQiOiI2NzI2NTJlZjEyOTIxMGI1NTNkMjRhZjAiLCJpYXQiOjE3MzA1NjcxODF9.DWpyGGnSPfX4TGXORE_vr8ic77JymRbirhivVgKN7lc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU2OTY1M30.I-ViN9t_JnWnXCRnk9X2i3SqPJfCbA9JC7sNvYl_6kc
 
 {
-    "name" : "Squat",
-    "reps" : 15
+    "name" : "Bicep curl",
+    "reps" : 12,
+    "weight": 20
 }
