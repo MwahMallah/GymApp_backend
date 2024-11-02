@@ -1,0 +1,7 @@
+PUT http://localhost:3005/api/exercise/672666579cb3c63ada3bf754
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU3MDAyNX0.nMXkze--LyDRN9zv0E56gY_5at1ZPV8nqVw8zBgj30Y
+
+{
+    "isCompleted": true
+}
