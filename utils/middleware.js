@@ -9,7 +9,7 @@ function errorHandler(err, req, res, next) {
     } if (err.name === 'CastError') {
         res.status(400).send({error: 'ObjectId must be 24 char length hex value'})
     } if (err.name === 'MongoServerError' && err.message.includes('E11000 duplicate key error')) {
-        res.status(401).send({error: 'token invalid'});
+        res.status(400).send({error: 'Expected `username` to be unique'});
     }
 }
 
