@@ -25,6 +25,12 @@ exerciseRouter.get("/", async (req, res) => {
 
 exerciseRouter.post('/', async (req, res, next) => {
     const user = req.user;
+    const {sets} = req.body;
+
+    if (!Array.isArray(sets) || !sets.every(set => 'weight' in set && 'reps' in set)) {
+        return res.status(400).json({ error: "Invalid format for sets" });
+    }
+
     const exercise = new Exercise(req.body);
     exercise.user = user.id;
     user.exercises = user.exercises.concat(exercise.id);
