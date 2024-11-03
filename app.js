@@ -16,7 +16,7 @@ mongoose.connect(config.DB_CONN_URL)
         logger.info("Connected to MongoDb");
     })
     .catch(e => {
-        logger.error('error connecting to MongoDB:', error.message);
+        logger.error('error connecting to MongoDB:', e.message);
     });
 
 const app = express();
