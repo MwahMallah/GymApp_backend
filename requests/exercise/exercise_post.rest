@@ -4,7 +4,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFud
 
 {
     "name" : "Block-pull",
-    "reps" : 10,
-    "sets": 3,
+    "sets": [ 
+        {
+            "weight": 17,
+            "reps" : 10
+        }, 
+        {
+            "weight": 25,
+            "reps" : 12
+        }
+    ],
     "date": "2024-11-15"
 }
