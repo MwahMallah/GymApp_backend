@@ -1,6 +1,71 @@
 const exerciseRouter = require('express').Router();
 const Exercise = require('../models/exercise');
 
+/**
+ * @openapi
+ * tags:
+ *   - name: Exercise
+ *     description: Operations related to Exercises
+ */
+
+/**
+ * @openapi
+ * paths:
+ *   /api/exercise:
+ *     get:
+ *       tags:
+ *         - Exercise
+ *       summary: Get exercises for the user based on the optional date filter
+ *       description: Fetches all exercises for the authenticated user. Optionally, exercises can be filtered by a specific date. If the `date` query parameter is provided, only exercises that occurred on that day will be returned.
+ *       operationId: getExercises
+ *       parameters:
+ *         - name: date
+ *           in: query
+ *           description: The date to filter exercises by
+ *           required: false
+ *           schema:
+ *             type: string
+ *             format: date
+ *       responses:
+ *         200:
+ *           description: A list of exercises for the user
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Exercise'
+ *         401:
+ *           description: Unauthorized, if the user is not authenticated
+ *         500:
+ *           description: Internal server error
+ * components:
+ *   schemas:
+ *     Exercise:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The unique identifier of the exercise
+ *         user:
+ *           type: string
+ *           description: The ID of the user associated with the exercise
+ *         date:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time when the exercise took place
+ *         type:
+ *           type: string
+ *           description: The type or category of the exercise (e.g., running, cycling)
+ *         duration:
+ *           type: number
+ *           format: float
+ *           description: The duration of the exercise in minutes
+ *         caloriesBurned:
+ *           type: number
+ *           format: float
+ *           description: The number of calories burned during the exercise
+ */
 exerciseRouter.get("/", async (req, res) => {
     const { date } = req.query;
     const query = { user: req.user.id };
@@ -23,6 +88,50 @@ exerciseRouter.get("/", async (req, res) => {
     res.json(exercises);
 });
 
+/**
+ * @openapi
+ * paths:
+ *   /api/exercise:
+ *     post:
+ *       tags:
+ *         - Exercise
+ *       summary: Create a new exercise for the user
+ *       description: Adds a new exercise entry for the authenticated user. The body should include exercise details, including the `sets` array (each containing `weight` and `reps`).
+ *       operationId: createExercise
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - sets
+ *               properties:
+ *                 sets:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       weight:
+ *                         type: number
+ *                         description: The weight used in the exercise set (in kilograms or pounds)
+ *                       reps:
+ *                         type: number
+ *                         description: The number of repetitions performed in the exercise set
+ *       responses:
+ *         201:
+ *           description: Exercise created successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Exercise'
+ *         400:
+ *           description: Bad request, if the provided sets are invalid (e.g., missing weight or reps)
+ *         401:
+ *           description: Unauthorized, if the user is not authenticated
+ *         500:
+ *           description: Internal server error
+ */
 exerciseRouter.post('/', async (req, res, next) => {
     const user = req.user;
     const {sets} = req.body;
@@ -44,6 +153,34 @@ exerciseRouter.post('/', async (req, res, next) => {
     }
 });
 
+
+/**
+ * @openapi
+ * paths:
+ *   /api/exercise/{id}:
+ *     delete:
+ *       tags:
+ *          - Exercise
+ *       summary: Delete a specific exercise for the user
+ *       description: Deletes the exercise with the specified ID for the authenticated user. The user must be the owner of the exercise to delete it.
+ *       operationId: deleteExercise
+ *       parameters:
+ *         - name: id
+ *           in: path
+ *           required: true
+ *           description: The ID of the exercise to be deleted
+ *           schema:
+ *             type: string
+ *       responses:
+ *         204:
+ *           description: Exercise successfully deleted
+ *         401:
+ *           description: Unauthorized, if the user is not the owner of the exercise
+ *         404:
+ *           description: Exercise not found, or if the exercise does not belong to the user
+ *         500:
+ *           description: Internal server error
+ */
 exerciseRouter.delete('/:id', async (req, res, next) => {
     try {
         const user = req.user;
@@ -71,6 +208,43 @@ exerciseRouter.delete('/:id', async (req, res, next) => {
     }
 });
 
+/**
+ * @openapi
+ * paths:
+ *   /exercise/{id}:
+ *     put:
+ *       tags:
+ *          - Exercise
+ *       summary: Update a specific exercise for the user
+ *       description: Updates the exercise with the specified ID for the authenticated user. The user must be the owner of the exercise to update it.
+ *       operationId: updateExercise
+ *       parameters:
+ *         - name: id
+ *           in: path
+ *           required: true
+ *           description: The ID of the exercise to be updated
+ *           schema:
+ *             type: string
+ *       requestBody:
+ *         description: The exercise object that contains the updated fields. All fields are optional but must match the exercise format.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Exercise'
+ *       responses:
+ *         200:
+ *           description: The updated exercise
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Exercise'
+ *         401:
+ *           description: Unauthorized, if the user is not the owner of the exercise
+ *         404:
+ *           description: Exercise not found, or if the exercise does not belong to the user
+ *         500:
+ *           description: Internal server error
+ */
 exerciseRouter.put('/:id', async (req, res, next) => {
     try {
         const user = req.user;
