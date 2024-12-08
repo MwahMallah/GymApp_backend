@@ -1,7 +1,45 @@
 const mongoose = require('mongoose');
 
-const default_photo_url = "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3408.jpg?semt=ais_hybrid";
+const default_photo_url = "https://img.icons8.com/?size=100&id=x0qTmzjcFRhW&format=png&color=000000";
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The unique identifier of the user.
+ *         username:
+ *           type: string
+ *           description: The username of the user, which is unique and has a minimum length of 3 characters.
+ *         name:
+ *           type: string
+ *           description: The full name of the user.
+ *         exercises:
+ *           type: array
+ *           items:
+ *             type: string
+ *             description: An array of `Exercise` IDs associated with the user.
+ *         food:
+ *           type: array
+ *           items:
+ *             type: string
+ *             description: An array of `Food` IDs associated with the user.
+ *         friends:
+ *           type: array
+ *           items:
+ *             type: string
+ *             description: An array of `User` IDs representing the user's friends.
+ *         photo_url:
+ *           type: string
+ *           description: A URL pointing to the user's profile photo. Defaults to a placeholder image.
+ *         passwordHash:
+ *           type: string
+ *           description: The hashed password of the user (not exposed in responses).
+ */
 const userSchema = new mongoose.Schema({
     username: {type: String, required: true, minLength: 3, unique: true},
     name: {type: String},

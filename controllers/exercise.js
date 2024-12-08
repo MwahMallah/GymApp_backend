@@ -15,17 +15,8 @@ const Exercise = require('../models/exercise');
  *     get:
  *       tags:
  *         - Exercise
- *       summary: Get exercises for the user based on the optional date filter
- *       description: Fetches all exercises for the authenticated user. Optionally, exercises can be filtered by a specific date. If the `date` query parameter is provided, only exercises that occurred on that day will be returned.
+ *       summary: Get exercises for the user
  *       operationId: getExercises
- *       parameters:
- *         - name: date
- *           in: query
- *           description: The date to filter exercises by
- *           required: false
- *           schema:
- *             type: string
- *             format: date
  *       responses:
  *         200:
  *           description: A list of exercises for the user
@@ -37,34 +28,6 @@ const Exercise = require('../models/exercise');
  *                   $ref: '#/components/schemas/Exercise'
  *         401:
  *           description: Unauthorized, if the user is not authenticated
- *         500:
- *           description: Internal server error
- * components:
- *   schemas:
- *     Exercise:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *           description: The unique identifier of the exercise
- *         user:
- *           type: string
- *           description: The ID of the user associated with the exercise
- *         date:
- *           type: string
- *           format: date-time
- *           description: The date and time when the exercise took place
- *         type:
- *           type: string
- *           description: The type or category of the exercise (e.g., running, cycling)
- *         duration:
- *           type: number
- *           format: float
- *           description: The duration of the exercise in minutes
- *         caloriesBurned:
- *           type: number
- *           format: float
- *           description: The number of calories burned during the exercise
  */
 exerciseRouter.get("/", async (req, res) => {
     const { date } = req.query;
@@ -87,7 +50,6 @@ exerciseRouter.get("/", async (req, res) => {
     const exercises = await Exercise.find(query);
     res.json(exercises);
 });
-
 /**
  * @openapi
  * paths:
@@ -109,36 +71,32 @@ exerciseRouter.get("/", async (req, res) => {
  *               properties:
  *                 sets:
  *                   type: array
+ *                   description: An array of sets, where each set contains `weight` and `reps` for the exercise.
  *                   items:
  *                     type: object
  *                     properties:
  *                       weight:
  *                         type: number
- *                         description: The weight used in the exercise set (in kilograms or pounds)
+ *                         description: The weight used in the exercise set (in kilograms or pounds).
  *                       reps:
  *                         type: number
- *                         description: The number of repetitions performed in the exercise set
+ *                         description: The number of repetitions performed in the exercise set.
  *       responses:
  *         201:
- *           description: Exercise created successfully
+ *           description: Exercise created successfully.
  *           content:
  *             application/json:
  *               schema:
  *                 $ref: '#/components/schemas/Exercise'
  *         400:
- *           description: Bad request, if the provided sets are invalid (e.g., missing weight or reps)
+ *           description: Bad request, if the provided sets are invalid (e.g., missing weight or reps).
  *         401:
- *           description: Unauthorized, if the user is not authenticated
+ *           description: Unauthorized, if the user is not authenticated.
  *         500:
- *           description: Internal server error
+ *           description: Internal server error.
  */
 exerciseRouter.post('/', async (req, res, next) => {
     const user = req.user;
-    const {sets} = req.body;
-
-    if (!Array.isArray(sets) || !sets.every(set => 'weight' in set && 'reps' in set)) {
-        return res.status(400).json({ error: "Invalid format for sets" });
-    }
 
     const exercise = new Exercise(req.body);
     exercise.user = user.id;

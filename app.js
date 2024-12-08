@@ -11,7 +11,6 @@ const exerciseRouter = require('./controllers/exercise');
 const foodRouter = require('./controllers/food');
 const middleware = require('./utils/middleware');
 
-
 mongoose.set('strictQuery', false);
 
 mongoose.connect(config.DB_CONN_URL)

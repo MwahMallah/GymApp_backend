@@ -14,7 +14,7 @@ const swaggerSpecs = swaggerJsDoc({
           },
         ],
       },
-      apis: ['./controllers/*.js'], 
+      apis: ['./models/*.js', './controllers/*.js'], 
 });
 
 

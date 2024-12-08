@@ -35,25 +35,7 @@ const bcrypt = require('bcrypt');
  *                 type: object
  *                 properties:
  *                   id:
- *                     type: string
- *                     description: Unique user identifier
- *                   username:
- *                     type: string
- *                     description: Username
- *                   name:
- *                     type: string
- *                     description: Username
- *                   photo_url:
- *                     type: string
- *                     description: url of the photo
- *                   friends:
- *                     type: array
- *                     items:
- *                       type: object
- *                       properties:
- *                          id:
- *                            type: string
- *                            description: freind's id
+ *                     $ref: '#/components/schemas/User'
  */
 usersRouter.get('/', async (req, res) => {
     const query = {};
@@ -92,17 +74,7 @@ usersRouter.get('/', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   description: Unique user identifier
- *                 username:
- *                   type: string
- *                   description: Username
- *                 name:
- *                   type: string
- *                   description: Name of the user
+ *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not found
  */
@@ -146,17 +118,7 @@ usersRouter.get('/:id', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   description: Unique user identifier
- *                 username:
- *                   type: string
- *                   description: Username
- *                 name:
- *                   type: string
- *                   description: Name of the user
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request, likely due to invalid input (password too short or missing fields)
  */
@@ -200,15 +162,18 @@ usersRouter.post('/', async (req, res, next) => {
  *     requestBody:
  *       required: false
  *     responses:
- *       204:
+ *       200:
  *         description: Friend added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request (user trying to add themselves or add a duplicate friend)
  *       404:
  *         description: Friend not found (invalid user ID)
  */
 usersRouter.post('/friends/:id', middleware.userExtractor, async (req, res, next) => {
-    
     const user = req.user;
     const friendId = req.params.id;
 
@@ -235,10 +200,84 @@ usersRouter.post('/friends/:id', middleware.userExtractor, async (req, res, next
         await user.save();
         await friend.save();
 
-        res.status(204).end();
+        const updatedUser = await User.findById(user.id)
+            .populate('exercises', {user: 0})
+            .populate('food', {user: 0})
+            .populate('friends');
+        
+        res.status(200).json(updatedUser);
     } catch (error) {
         next(error);
     }
 });
+
+
+/**
+ * @openapi
+ * /api/user/friends/{id}:
+ *   delete:
+ *     tags:
+ *       - Users
+ *     summary: Delete a friend from the current user's friend list
+ *     description: Deletes a friend from the current user's friend list by specifying the friend's ID. The user cannot delete themselves, and they cannot delete a friend that's not in their list.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user's unique identifier (the friend to be added)
+ *     requestBody:
+ *       required: false
+ *     responses:
+ *       200:
+ *         description: Friend deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request (user trying to add themselves or add a duplicate friend)
+ *       404:
+ *         description: Friend not found (invalid user ID)
+ */
+usersRouter.delete('/friends/:id', middleware.userExtractor, async (req, res, next) => {
+    const user = req.user;
+    const friendId = req.params.id;
+
+    try {
+        // User shouldn't delete himself
+        if (user.id === friendId) {
+            return res.status(400).json({ error: "You can't delete yourself as a friend." });
+        }
+
+        const friend = await User.findById(friendId);
+
+        if (!friend) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        // Check that friend is not already added
+        if (!user.friends.includes(friendId)) {
+            return res.status(400).json({ error: "Friend is not added." });
+        }
+
+        // Adding friend
+        user.friends.pull(friendId);
+        friend.friends.pull(user.id);
+        await user.save();
+        await friend.save();
+
+        const updatedUser = await User.findById(user.id)
+            .populate('exercises', {user: 0})
+            .populate('food', {user: 0})
+            .populate('friends');
+        
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = usersRouter;
