@@ -123,7 +123,7 @@ usersRouter.get('/:id', async (req, res) => {
  *         description: Bad request, likely due to invalid input (password too short or missing fields)
  */
 usersRouter.post('/', async (req, res, next) => {
-    let {username, password, name} = req.body;
+    let {username, password, name } = req.body;
     password = String(password);
 
     if (!password || password.length < 3)
@@ -141,6 +141,29 @@ usersRouter.post('/', async (req, res, next) => {
     } catch(e) {
 
         next(e);
+    }
+});
+
+usersRouter.put('/', middleware.userExtractor,  async (req, res, next) => {
+    const user = req.user;
+
+    try {
+        const {name, username, photo_url} = req.body;
+
+        if (name) user.name = name;
+        if (username) user.username = username;
+        if (photo_url) user.photo_url = photo_url;
+        // Update user
+        await user.save();
+
+        const updatedUser = await User.findById(user.id)
+            .populate('exercises', {user: 0})
+            .populate('food', {user: 0})
+            .populate('friends');
+        
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        next(error);
     }
 });
 

@@ -34,8 +34,6 @@ async function userExtractor(req, res, next) {
     
         const {id, username, name} = decodedToken;
         const user = await User.findById(id);
-        if (!user || user.username != username || (name && user.name != name))
-            return res.status(401).json({error: "token is invalid"});
     
         req.user = user;
         next();
