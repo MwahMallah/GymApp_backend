@@ -5,10 +5,13 @@ const config = require('./config');
 const logger = require('./utils/logger');
 const swaggerSpec = require('./utils/swagger');
 const swaggerUi = require('swagger-ui-express');
+
 const userRouter = require('./controllers/user');
 const loginRouter = require('./controllers/login');
 const exerciseRouter = require('./controllers/exercise');
 const foodRouter = require('./controllers/food');
+const messageRouter = require('./controllers/messages');
+
 const middleware = require('./utils/middleware');
 
 mongoose.set('strictQuery', false);
@@ -32,6 +35,7 @@ app.use('/api/user', userRouter)
 app.use('/api/login', loginRouter);
 app.use('/api/exercise', middleware.userExtractor, exerciseRouter);
 app.use('/api/food', middleware.userExtractor, foodRouter);
+app.use('/api/messages', messageRouter);
 
 app.use(middleware.errorHandler);
 
