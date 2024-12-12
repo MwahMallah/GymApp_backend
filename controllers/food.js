@@ -1,5 +1,7 @@
 const foodRouter = require('express').Router();
 const Food = require('../models/food');
+const {FOOD_API_KEY} = require('../config');
+const axios = require('axios');
 
 /**
  * @openapi
@@ -139,11 +141,29 @@ foodRouter.get("/", async (req, res) => {
  */
 foodRouter.post('/', async (req, res, next) => {
     const user = req.user;
-    const food = new Food(req.body);
-    food.user = user.id;
-    user.food = user.food.concat(food.id);
 
+    const size = req.body.size;
+    const foundFood = await searchFood(req.body.name);
+    const {foodNutrients: nutrients, servingSize} = await getFoodNutrients(foundFood.fdcId);
+
+    //adjust to weight, that user took
+    const ratio = size / servingSize;
+    const proteinsId = 1003;
+    const fatsId = 1004;
+    const carbsId = 1005;
+    const energyId = 1008;
+
+    const proteins = nutrients.find(n => n.nutrient.id === proteinsId)?.amount * ratio || 0;
+    const fats = nutrients.find(n => n.nutrient.id === fatsId)?.amount * ratio || 0;
+    const carbs = nutrients.find(n => n.nutrient.id === carbsId)?.amount * ratio || 0;
+    const calories = nutrients.find(n => n.nutrient.id === energyId)?.amount * ratio || 0;
+
+    const food = new Food({...req.body, carbs, fats, calories, proteins});
+    food.user = user.id;
+    
     try {
+        user.food = user.food.concat(food.id);
+
         const savedFood = await food.save();
         await user.save();
         res.status(201).json(savedFood);
@@ -151,6 +171,42 @@ foodRouter.post('/', async (req, res, next) => {
         next(e)
     }
 });
+
+//finds food by name
+async function searchFood(name) {
+    const url = 'https://api.nal.usda.gov/fdc/v1/foods/search';
+
+    try {
+        const response = await axios.get(url, {
+            params: {
+                query: name,
+                api_key: FOOD_API_KEY,
+                pageSize: 1
+            }
+        });
+
+        return response.data.foods[0]; // Take first result
+    } catch (error) {
+        console.error('Error fetching food data:', error.message);
+        return null;
+    }
+}
+
+//finds food nutrients by food id
+async function getFoodNutrients(fdcId) {
+    const url = `https://api.nal.usda.gov/fdc/v1/food/${fdcId}`;
+
+    try {
+        const response = await axios.get(url, {
+            params: { api_key: FOOD_API_KEY }
+        });
+
+        return response.data; 
+    } catch (error) {
+        console.error('Error fetching nutrient data:', error.message);
+        return null;
+    }
+}
 
 /**
  * @openapi

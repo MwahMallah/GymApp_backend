@@ -27,7 +27,11 @@ const mongoose = require('mongoose');
  */
 const foodScheme = new mongoose.Schema({
     name: {type: String, required: true},
+    size: {type: String, required: true},
     calories: {type: Number},
+    proteins: {type: Number},
+    carbs: {type: Number},
+    fats: {type: Number},
     date: {type: Date},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
