@@ -1,9 +1,9 @@
 POST http://localhost:3005/api/food
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDU3MDc5MH0.LCnEJsyLi3qEflTaknDt3R-uikpPHGJ99K8fO2UIeNM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uX2hhdmwiLCJpZCI6IjY3MjY1NDZkNmYzMTU2NDIxYTcyZmQ3ZCIsImlhdCI6MTczMDY1MjU3N30.ptsI5pNEiOiTOcgbkDhwpLzDnURrT3J8KKVXojoCtWA
 
 {
-    "name" : "Eggs",
-    "calories": 100,
-    "date": "2024-11-02"
+    "name" : "apple",
+    "size" : 200,
+    "date": "2024-11-05"
 }
