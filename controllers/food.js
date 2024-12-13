@@ -144,6 +144,11 @@ foodRouter.post('/', async (req, res, next) => {
 
     const size = req.body.size;
     const foundFood = await searchFood(req.body.name);
+
+    if (foundFood === null) {
+        return res.status(404).end();
+    }
+
     const {foodNutrients: nutrients, servingSize} = await getFoodNutrients(foundFood.fdcId);
 
     //adjust to weight, that user took
