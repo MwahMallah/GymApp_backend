@@ -347,6 +347,7 @@ foodRouter.put('/:id', async (req, res, next) => {
             return res.status(404).end();
         }
 
+        const size = req.body.size;
         const {foodNutrients: nutrients, servingSize} = await getFoodNutrients(foundFood.fdcId);
 
         //adjust to weight, that user took
