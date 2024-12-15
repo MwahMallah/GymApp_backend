@@ -143,6 +143,8 @@ exerciseRouter.delete('/:id', async (req, res, next) => {
     try {
         const user = req.user;
         const id = req.params.id;
+
+
         const exerciseToDelete = await Exercise.findById(id);
 
         if (!exerciseToDelete) {
@@ -207,6 +209,7 @@ exerciseRouter.put('/:id', async (req, res, next) => {
     try {
         const user = req.user;
         const id = req.params.id;
+        console.log(req.body);
 
         const exerciseToUpdate = await Exercise.findById(id);
 
@@ -217,6 +220,7 @@ exerciseRouter.put('/:id', async (req, res, next) => {
         if (exerciseToUpdate.user.toString() != user.id.toString()) {
             return res.status(401).json({error: "provided user is not owner of the exercise."});
         }
+
 
         const updated = await Exercise.findByIdAndUpdate(id, req.body, {new: true});
 

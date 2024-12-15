@@ -44,6 +44,7 @@ const exerciseSchema = new mongoose.Schema({
             isCompleted: {type: Boolean, default: false},
         }
     ],
+    type: {type: String, enum: ['back', 'legs', 'chest', 'arms'], required: true},    
     date: {type: Date},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
