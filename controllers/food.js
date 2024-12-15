@@ -341,7 +341,27 @@ foodRouter.put('/:id', async (req, res, next) => {
             return res.status(401).json({error: "provided user is not owner of the food."});
         }
 
-        const updated = await Food.findByIdAndUpdate(id, req.body, {new: true});
+        const foundFood = await searchFood(req.body.name);
+
+        if (foundFood === null) {
+            return res.status(404).end();
+        }
+
+        const {foodNutrients: nutrients, servingSize} = await getFoodNutrients(foundFood.fdcId);
+
+        //adjust to weight, that user took
+        const ratio = size / servingSize;
+        const proteinsId = 1003;
+        const fatsId = 1004;
+        const carbsId = 1005;
+        const energyId = 1008;
+
+        const proteins = nutrients.find(n => n.nutrient.id === proteinsId)?.amount * ratio || 0;
+        const fats = nutrients.find(n => n.nutrient.id === fatsId)?.amount * ratio || 0;
+        const carbs = nutrients.find(n => n.nutrient.id === carbsId)?.amount * ratio || 0;
+        const calories = nutrients.find(n => n.nutrient.id === energyId)?.amount * ratio || 0;
+
+        const updated = await Food.findByIdAndUpdate(id, {...req.body, proteins, carbs, fats, calories}, {new: true});
 
         if (updated) {
             res.status(200).json(updated);
